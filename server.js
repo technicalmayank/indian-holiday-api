@@ -12,14 +12,13 @@ const host = '0.0.0.0'; // Listen on all network interfaces
 const port = 8080; // Port number for the proxy server
 
 const server = corsAnywhere.createServer({
-  originWhitelist: ['http://localhost:3000'], // Allow requests from localhost:3000
+  originWhitelist: [], // Allow all origins
 });
 
 server.listen(port, host, () => {
   console.log(`CORS Anywhere server is running on ${host}:${port}`);
 });
 
-// Middleware to validate API key
 const apiKeyMiddleware = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   const validApiKey = 'baf0b635ed05bdbf28929f41a909859df15c8342549e4d8a1a091a10714870e0';
@@ -27,12 +26,11 @@ const apiKeyMiddleware = (req, res, next) => {
   if (!apiKey || apiKey !== validApiKey) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-  next(); // Move to the next middleware
+  next();
 };
 
 app.use(apiKeyMiddleware);
 
-// Connect to MongoDB database
 mongoose.connect('mongodb+srv://gurjeet:eupL6VitHuzsaItm@cluster0.vrfntvb.mongodb.net/grid21', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -43,10 +41,8 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// Define routes
 app.use('/api/holidays', holidayRoutes);
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
