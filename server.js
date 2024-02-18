@@ -12,8 +12,10 @@ const host = '0.0.0.0'; // Listen on all network interfaces
 const port = 8080; // Port number for the proxy server
 
 const server = corsAnywhere.createServer({
-  originWhitelist: [], // Allow all origins
+  originWhitelist: ['http://localhost:3000/'],
 });
+
+
 server.listen(port, host, () => {
   console.log(`CORS Anywhere server is running on ${host}:${port}`);
 });
